@@ -15,6 +15,7 @@ func InitRoutes() http.Handler {
 
 	r.Route("/api/v1", func(r chi.Router) {
 		UserRoutes(r)
+		TaskRoutes(r)
 	})
 
 	return r

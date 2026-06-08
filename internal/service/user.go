@@ -1,17 +1,11 @@
 package service
 
-type UserService struct{}
-
-func NewUserService() *UserService {
-	return &UserService{}
-}
-
-func (s *UserService) Register()
+import "fmt"
 
 func GetAllUsers() string {
 	return "all_users"
 }
 
-func GetSingleUsers() string {
-	return "single_user"
+func GetSingleUser(id uint) string {
+	return fmt.Sprintf("single_user_%d", id)
 }
