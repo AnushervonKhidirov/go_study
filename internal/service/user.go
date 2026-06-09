@@ -1,11 +1,21 @@
 package service
 
-import "fmt"
+import (
+	"task_tracker/internal/model"
+)
 
-func GetAllUsers() string {
-	return "all_users"
+type UserService struct{}
+
+func (s *UserService) GetAllUsers() ([]model.User, error) {
+	users := []model.User{
+		{Id: 1, Email: "someemail@gmail.com", Name: "Some"},
+		{Id: 2, Email: "someemail@yandex.com", Name: "Name"},
+	}
+
+	return users, nil
 }
 
-func GetSingleUser(id uint) string {
-	return fmt.Sprintf("single_user_%d", id)
+func (s *UserService) GetSingleUser(id uint) (*model.User, error) {
+	user := model.User{Id: id, Email: "someemail@gmail.com", Name: "Some"}
+	return &user, nil
 }
