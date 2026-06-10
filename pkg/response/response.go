@@ -13,12 +13,10 @@ const (
 	ApplicationJson = "application/json"
 )
 
-type WriteResponse struct{}
-
-func (r WriteResponse) SendData(w http.ResponseWriter, data any, statusCode int) {
+func SendData[Type any](w http.ResponseWriter, data *Type, statusCode int) {
 	w.Header().Set(ContentType, ApplicationJson)
 
-	responseData := model.Response[any]{Data: data, Status: statusCode}
+	responseData := model.Response[*Type]{Data: data, Status: statusCode}
 
 	jsonResponse, err := json.Marshal(responseData)
 
@@ -31,7 +29,7 @@ func (r WriteResponse) SendData(w http.ResponseWriter, data any, statusCode int)
 	w.Write(jsonResponse)
 }
 
-func (r WriteResponse) SendAppErr(w http.ResponseWriter, appErr *apperr.AppErr) {
+func SendAppErr(w http.ResponseWriter, appErr *apperr.AppErr) {
 	w.Header().Set(ContentType, ApplicationJson)
 
 	jsonResponse, err := json.Marshal(&appErr)
@@ -45,7 +43,7 @@ func (r WriteResponse) SendAppErr(w http.ResponseWriter, appErr *apperr.AppErr) 
 	w.Write([]byte(jsonResponse))
 }
 
-func (r WriteResponse) SendErr(w http.ResponseWriter, err error, statusCode int) {
+func SendErr(w http.ResponseWriter, err error, statusCode int) {
 	w.Header().Set(ContentType, ApplicationJson)
 
 	responseErr := model.Response[any]{Error: err.Error(), Status: statusCode}

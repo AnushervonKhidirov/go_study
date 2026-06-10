@@ -33,13 +33,13 @@ func (s *TaskService) GetSingleTask(id uint) (*model.Task, error) {
 	for _, v := range *tasks {
 		if v.Id == id {
 			task = &v
+			break
 		}
 	}
 
 	if task == nil {
-		var appErr apperr.AppErr
 		message := "Task not found"
-		return nil, appErr.NotFoundErr(&message)
+		return nil, apperr.NotFoundErr(&message)
 	}
 
 	return task, nil

@@ -37,10 +37,8 @@ func (s *UserService) GetSingleUser(id uint) (*model.User, error) {
 	}
 
 	if user == nil {
-		var appErr apperr.AppErr
 		message := "User not found"
-
-		return nil, appErr.NotFoundErr(&message)
+		return nil, apperr.NotFoundErr(&message)
 	}
 
 	return user, nil

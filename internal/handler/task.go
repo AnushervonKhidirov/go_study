@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"task_tracker/internal/model"
 	"task_tracker/internal/service"
+	"task_tracker/pkg/apperr"
+	"task_tracker/pkg/response"
 	"task_tracker/pkg/validation"
 
 	"github.com/go-chi/chi/v5"
@@ -17,28 +19,28 @@ func GetAllTasksHandler(w http.ResponseWriter, r *http.Request) {
 	tasks, err := taskService.GetAllTasks()
 
 	if err != nil {
-		writeResponse.SendAppErr(w, appErr.ConvertToAppErr(err))
+		response.SendAppErr(w, apperr.ConvertToAppErr(err))
 		return
 	}
 
-	writeResponse.SendData(w, tasks, http.StatusOK)
+	response.SendData(w, tasks, http.StatusOK)
 }
 
 func GetSingleTaskHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseUint(chi.URLParam(r, "id"), 0, 64)
 
 	if err != nil {
-		writeResponse.SendAppErr(w, appErr.ConvertToAppErr(err))
+		response.SendAppErr(w, apperr.ConvertToAppErr(err))
 	}
 
 	task, err := taskService.GetSingleTask(uint(id))
 
 	if err != nil {
-		writeResponse.SendAppErr(w, appErr.ConvertToAppErr(err))
+		response.SendAppErr(w, apperr.ConvertToAppErr(err))
 		return
 	}
 
-	writeResponse.SendData(w, task, http.StatusOK)
+	response.SendData(w, task, http.StatusOK)
 }
 
 func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
@@ -48,7 +50,7 @@ func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		message := err.Error()
-		writeResponse.SendAppErr(w, appErr.BadRequestErr(&message))
+		response.SendAppErr(w, apperr.BadRequestErr(&message))
 		return
 	}
 
@@ -56,14 +58,14 @@ func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		message := err.Error()
-		writeResponse.SendAppErr(w, appErr.BadRequestErr(&message))
+		response.SendAppErr(w, apperr.BadRequestErr(&message))
 		return
 	}
 
 	err = taskService.AddTask(&t)
 
 	if err != nil {
-		writeResponse.SendAppErr(w, appErr.ConvertToAppErr(err))
+		response.SendAppErr(w, apperr.ConvertToAppErr(err))
 		return
 	}
 

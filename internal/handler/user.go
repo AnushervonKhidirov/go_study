@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"task_tracker/internal/model"
 	"task_tracker/internal/service"
+	"task_tracker/pkg/apperr"
+	"task_tracker/pkg/response"
 	"task_tracker/pkg/validation"
 
 	"github.com/go-chi/chi/v5"
@@ -17,29 +19,29 @@ func GetAllUsersHandler(w http.ResponseWriter, r *http.Request) {
 	users, err := userService.GetAllUsers()
 
 	if err != nil {
-		writeResponse.SendErr(w, err, http.StatusInternalServerError)
+		response.SendErr(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	writeResponse.SendData(w, users, http.StatusOK)
+	response.SendData(w, users, http.StatusOK)
 }
 
 func GetSingleUserHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseUint(chi.URLParam(r, "id"), 0, 64)
 
 	if err != nil {
-		writeResponse.SendErr(w, err, http.StatusInternalServerError)
+		response.SendErr(w, err, http.StatusInternalServerError)
 		return
 	}
 
 	user, err := userService.GetSingleUser(uint(id))
 
 	if err != nil {
-		writeResponse.SendAppErr(w, appErr.ConvertToAppErr(err))
+		response.SendAppErr(w, apperr.ConvertToAppErr(err))
 		return
 	}
 
-	writeResponse.SendData(w, user, http.StatusOK)
+	response.SendData(w, user, http.StatusOK)
 }
 
 func AddUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -49,7 +51,7 @@ func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		message := err.Error()
-		writeResponse.SendAppErr(w, appErr.BadRequestErr(&message))
+		response.SendAppErr(w, apperr.BadRequestErr(&message))
 		return
 	}
 
@@ -57,14 +59,14 @@ func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		message := err.Error()
-		writeResponse.SendAppErr(w, appErr.BadRequestErr(&message))
+		response.SendAppErr(w, apperr.BadRequestErr(&message))
 		return
 	}
 
 	err = userService.AddUser(&u)
 
 	if err != nil {
-		writeResponse.SendAppErr(w, appErr.ConvertToAppErr(err))
+		response.SendAppErr(w, apperr.ConvertToAppErr(err))
 		return
 	}
 
