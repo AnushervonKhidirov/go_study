@@ -10,5 +10,6 @@ func UserRoutes(r chi.Router) {
 	r.Route("/users", func(r chi.Router) {
 		r.Get("/", handler.GetAllUsersHandler)
 		r.Get("/{id}", handler.GetSingleUserHandler)
+		r.Post("/", handler.AddUserHandler)
 	})
 }

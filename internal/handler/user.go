@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
+	"task_tracker/internal/model"
 	"task_tracker/internal/service"
 
 	"github.com/go-chi/chi/v5"
@@ -37,4 +39,18 @@ func GetSingleUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeResponse.SendData(w, user, http.StatusOK)
+}
+
+func AddUserHandler(w http.ResponseWriter, r *http.Request) {
+	var u model.CreateUser
+
+	err := json.NewDecoder(r.Body).Decode(&u)
+
+	if err != nil {
+		writeResponse.SendAppErr(w, appErr.ConvertToAppErr(err))
+		return
+	}
+
+	userService.AddUser(&u)
+	w.WriteHeader(200)
 }
