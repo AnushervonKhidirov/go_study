@@ -2,11 +2,11 @@ package model
 
 type User struct {
 	Id    uint   `json:"id"`
-	Email string `json:"email"`
 	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 type CreateUser struct {
-	Email string
-	Name  string
+	Name  string `validate:"required"`
+	Email string `validate:"required,email"`
 }

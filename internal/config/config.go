@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/ilyakaznacheev/cleanenv"
@@ -26,12 +25,9 @@ func InitConfig() *AppConfig {
 		panic("Enable load .env file")
 	}
 
-	var cfg AppConfig
-
 	configPath := os.Getenv("CONFIG_PATH")
 
-	fmt.Println("configPath", configPath)
-
+	var cfg AppConfig
 	err = cleanenv.ReadConfig(configPath, &cfg)
 
 	if err != nil {

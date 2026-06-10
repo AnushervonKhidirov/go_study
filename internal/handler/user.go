@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"task_tracker/internal/model"
 	"task_tracker/internal/service"
+	"task_tracker/pkg/validation"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -47,10 +48,25 @@ func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&u)
 
 	if err != nil {
+		message := err.Error()
+		writeResponse.SendAppErr(w, appErr.BadRequestErr(&message))
+		return
+	}
+
+	err = validation.Validate(&u)
+
+	if err != nil {
+		message := err.Error()
+		writeResponse.SendAppErr(w, appErr.BadRequestErr(&message))
+		return
+	}
+
+	err = userService.AddUser(&u)
+
+	if err != nil {
 		writeResponse.SendAppErr(w, appErr.ConvertToAppErr(err))
 		return
 	}
 
-	userService.AddUser(&u)
 	w.WriteHeader(200)
 }

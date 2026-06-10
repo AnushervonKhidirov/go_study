@@ -39,7 +39,8 @@ func (e AppErr) ConvertToAppErr(err error) *AppErr {
 		return appErrType
 	}
 
-	return e.CreateErr(http.StatusInternalServerError, InternalServerError, nil)
+	message := err.Error()
+	return e.CreateErr(http.StatusInternalServerError, InternalServerError, &message)
 }
 
 // NOTE: Client error responses: 4XX

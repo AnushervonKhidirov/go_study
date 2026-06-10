@@ -2,11 +2,11 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"task_tracker/internal/model"
 	"task_tracker/internal/service"
+	"task_tracker/pkg/validation"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -42,17 +42,25 @@ func GetSingleTaskHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
-	var task model.CreateTask
+	var t model.CreateTask
 
-	err := json.NewDecoder(r.Body).Decode(&task)
+	err := json.NewDecoder(r.Body).Decode(&t)
 
 	if err != nil {
-		fmt.Println("err", err)
-		writeResponse.SendAppErr(w, appErr.ConvertToAppErr(err))
+		message := err.Error()
+		writeResponse.SendAppErr(w, appErr.BadRequestErr(&message))
 		return
 	}
 
-	err = taskService.AddTask(&task)
+	err = validation.Validate(&t)
+
+	if err != nil {
+		message := err.Error()
+		writeResponse.SendAppErr(w, appErr.BadRequestErr(&message))
+		return
+	}
+
+	err = taskService.AddTask(&t)
 
 	if err != nil {
 		writeResponse.SendAppErr(w, appErr.ConvertToAppErr(err))

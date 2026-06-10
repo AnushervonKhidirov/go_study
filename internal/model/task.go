@@ -8,7 +8,7 @@ type Task struct {
 }
 
 type CreateTask struct {
-	Title     string `json:"title"`
-	Desc      string `json:"desc"`
-	Completed bool   `json:"completed"`
+	Title     string `validate:"required"`
+	Desc      string `validate:"required"`
+	Completed bool   `validate:"required,boolean"`
 }
