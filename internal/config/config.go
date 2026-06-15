@@ -24,7 +24,7 @@ type DatabaseConfig struct {
 	DBPort     uint   `yaml:"port" env-required:"true"`
 	DBUser     string `yaml:"user" env-required:"true"`
 	DBPassword string `yaml:"password" env-required:"true"`
-	DBName     string `yaml:"dbname" env-required:"true"`
+	DBName     string `yaml:"db_name" env-required:"true"`
 }
 
 func InitConfig() *AppConfig {

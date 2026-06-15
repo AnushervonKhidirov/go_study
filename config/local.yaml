@@ -10,4 +10,4 @@ database:
   port: 5432
   user: "postgres"
   password: "mypass"
-  dbname: "task_tracker"
+  db_name: "task_tracker"
