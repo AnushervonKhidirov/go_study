@@ -15,7 +15,7 @@ func NewTaskRepository(db *gorm.DB) *TaskRepository {
 	return &TaskRepository{db: db}
 }
 
-func (r *TaskRepository) GetAll() (*[]model.Task, error) {
+func (r *TaskRepository) GetAll() ([]model.Task, error) {
 	ctx := context.Background()
 	tasks, err := gorm.G[model.Task](r.db).Find(ctx)
 
@@ -23,7 +23,7 @@ func (r *TaskRepository) GetAll() (*[]model.Task, error) {
 		return nil, err
 	}
 
-	return &tasks, nil
+	return tasks, nil
 }
 
 func (r *TaskRepository) GetById(id int) (*model.Task, error) {

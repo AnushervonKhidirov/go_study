@@ -25,18 +25,18 @@ func (h *UserHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	users, err := h.service.GetAll()
 
 	if err != nil {
-		response.SendErr(w, err, http.StatusInternalServerError)
+		response.SendAppErr(w, apperr.ConvertToAppErr(err))
 		return
 	}
 
-	response.SendData(w, users, http.StatusOK)
+	response.SendData(w, &users, http.StatusOK)
 }
 
 func (h *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(chi.URLParam(r, "id"), 0, 64)
 
 	if err != nil {
-		response.SendErr(w, err, http.StatusInternalServerError)
+		response.SendAppErr(w, apperr.ConvertToAppErr(err))
 		return
 	}
 

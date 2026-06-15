@@ -13,7 +13,7 @@ func NewUserService(r *repository.UserRepository) *UserService {
 	return &UserService{repository: r}
 }
 
-func (s *UserService) GetAll() (*[]model.User, error) {
+func (s *UserService) GetAll() ([]model.User, error) {
 	users, err := s.repository.GetAll()
 
 	if err != nil {

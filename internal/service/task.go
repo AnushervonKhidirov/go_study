@@ -13,7 +13,7 @@ func NewTaskService(r *repository.TaskRepository) *TaskService {
 	return &TaskService{repository: r}
 }
 
-func (s *TaskService) GetAll() (*[]model.Task, error) {
+func (s *TaskService) GetAll() ([]model.Task, error) {
 	tasks, err := s.repository.GetAll()
 
 	if err != nil {

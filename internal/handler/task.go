@@ -29,7 +29,7 @@ func (h *TaskHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.SendData(w, tasks, http.StatusOK)
+	response.SendData(w, &tasks, http.StatusOK)
 }
 
 func (h *TaskHandler) GetById(w http.ResponseWriter, r *http.Request) {

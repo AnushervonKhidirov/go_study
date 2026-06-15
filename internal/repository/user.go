@@ -15,7 +15,7 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-func (r *UserRepository) GetAll() (*[]model.User, error) {
+func (r *UserRepository) GetAll() ([]model.User, error) {
 	ctx := context.Background()
 	users, err := gorm.G[model.User](r.db).Find(ctx)
 
@@ -23,7 +23,7 @@ func (r *UserRepository) GetAll() (*[]model.User, error) {
 		return nil, err
 	}
 
-	return &users, nil
+	return users, nil
 }
 
 func (r *UserRepository) GetById(id int) (*model.User, error) {
