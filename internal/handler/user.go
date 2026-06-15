@@ -29,7 +29,7 @@ func (h *UserHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.SendData(w, &users, http.StatusOK)
+	response.SendData(w, users, http.StatusOK)
 }
 
 func (h *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +47,7 @@ func (h *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.SendData(w, user, http.StatusOK)
+	response.SendData(w, *user, http.StatusOK)
 }
 
 func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
@@ -76,5 +76,5 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(200)
+	response.SendData(w, &u, http.StatusCreated)
 }

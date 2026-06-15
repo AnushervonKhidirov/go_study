@@ -29,7 +29,7 @@ func (h *TaskHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.SendData(w, &tasks, http.StatusOK)
+	response.SendData(w, tasks, http.StatusOK)
 }
 
 func (h *TaskHandler) GetById(w http.ResponseWriter, r *http.Request) {
@@ -46,7 +46,7 @@ func (h *TaskHandler) GetById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.SendData(w, task, http.StatusOK)
+	response.SendData(w, *task, http.StatusOK)
 }
 
 func (h *TaskHandler) Create(w http.ResponseWriter, r *http.Request) {
@@ -75,5 +75,5 @@ func (h *TaskHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(200)
+	response.SendData(w, &t, http.StatusCreated)
 }

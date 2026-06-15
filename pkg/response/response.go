@@ -13,11 +13,10 @@ const (
 	ApplicationJson = "application/json"
 )
 
-func SendData[Type any](w http.ResponseWriter, data *Type, statusCode int) {
+func SendData[Type any](w http.ResponseWriter, data Type, statusCode int) {
 	w.Header().Set(ContentType, ApplicationJson)
 
-	responseData := model.Response[*Type]{Data: data, Status: statusCode}
-
+	responseData := model.Response[Type]{Data: data, Status: statusCode}
 	jsonResponse, err := json.Marshal(responseData)
 
 	if err != nil {
@@ -47,7 +46,6 @@ func SendErr(w http.ResponseWriter, err error, statusCode int) {
 	w.Header().Set(ContentType, ApplicationJson)
 
 	responseErr := model.Response[any]{Error: err.Error(), Status: statusCode}
-
 	jsonResponse, err := json.Marshal(responseErr)
 
 	if err != nil {
