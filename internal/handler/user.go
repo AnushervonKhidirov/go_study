@@ -25,7 +25,7 @@ func (h *UserHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	users, err := h.service.GetAll()
 
 	if err != nil {
-		response.SendAppErr(w, apperr.ConvertToAppErr(err))
+		response.SendErr(w, apperr.ConvertToAppErr(err))
 		return
 	}
 
@@ -36,14 +36,14 @@ func (h *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(chi.URLParam(r, "id"), 0, 64)
 
 	if err != nil {
-		response.SendAppErr(w, apperr.ConvertToAppErr(err))
+		response.SendErr(w, apperr.ConvertToAppErr(err))
 		return
 	}
 
 	user, err := h.service.GetById(int(id))
 
 	if err != nil {
-		response.SendAppErr(w, apperr.ConvertToAppErr(err))
+		response.SendErr(w, apperr.ConvertToAppErr(err))
 		return
 	}
 
@@ -57,7 +57,7 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		message := err.Error()
-		response.SendAppErr(w, apperr.BadRequestErr(&message))
+		response.SendErr(w, apperr.BadRequestErr(&message))
 		return
 	}
 
@@ -65,14 +65,14 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		message := err.Error()
-		response.SendAppErr(w, apperr.BadRequestErr(&message))
+		response.SendErr(w, apperr.BadRequestErr(&message))
 		return
 	}
 
 	err = h.service.Create(&u)
 
 	if err != nil {
-		response.SendAppErr(w, apperr.ConvertToAppErr(err))
+		response.SendErr(w, apperr.ConvertToAppErr(err))
 		return
 	}
 
