@@ -13,10 +13,16 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-var taskService service.TaskService
+type TaskHandler struct {
+	service *service.TaskService
+}
 
-func GetAllTasksHandler(w http.ResponseWriter, r *http.Request) {
-	tasks, err := taskService.GetAllTasks()
+func NewTaskHandler(s *service.TaskService) *TaskHandler {
+	return &TaskHandler{service: s}
+}
+
+func (h *TaskHandler) GetAll(w http.ResponseWriter, r *http.Request) {
+	tasks, err := h.service.GetAll()
 
 	if err != nil {
 		response.SendAppErr(w, apperr.ConvertToAppErr(err))
@@ -26,14 +32,14 @@ func GetAllTasksHandler(w http.ResponseWriter, r *http.Request) {
 	response.SendData(w, tasks, http.StatusOK)
 }
 
-func GetSingleTaskHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.ParseUint(chi.URLParam(r, "id"), 0, 64)
+func (h *TaskHandler) GetById(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(chi.URLParam(r, "id"), 0, 64)
 
 	if err != nil {
 		response.SendAppErr(w, apperr.ConvertToAppErr(err))
 	}
 
-	task, err := taskService.GetSingleTask(uint(id))
+	task, err := h.service.GetById(int(id))
 
 	if err != nil {
 		response.SendAppErr(w, apperr.ConvertToAppErr(err))
@@ -43,8 +49,8 @@ func GetSingleTaskHandler(w http.ResponseWriter, r *http.Request) {
 	response.SendData(w, task, http.StatusOK)
 }
 
-func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
-	var t model.CreateTask
+func (h *TaskHandler) Create(w http.ResponseWriter, r *http.Request) {
+	var t model.Task
 
 	err := json.NewDecoder(r.Body).Decode(&t)
 
@@ -62,7 +68,7 @@ func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = taskService.AddTask(&t)
+	err = h.service.Create(&t)
 
 	if err != nil {
 		response.SendAppErr(w, apperr.ConvertToAppErr(err))

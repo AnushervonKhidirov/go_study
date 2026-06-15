@@ -6,10 +6,10 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func TaskRoutes(r chi.Router) {
+func TaskRoutes(r chi.Router, h *handler.TaskHandler) {
 	r.Route("/tasks", func(r chi.Router) {
-		r.Get("/", handler.GetAllTasksHandler)
-		r.Get("/{id}", handler.GetSingleTaskHandler)
-		r.Post("/", handler.AddTaskHandler)
+		r.Get("/", h.GetAll)
+		r.Get("/{id}", h.GetById)
+		r.Post("/", h.Create)
 	})
 }

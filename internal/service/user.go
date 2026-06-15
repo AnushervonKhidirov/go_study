@@ -1,67 +1,40 @@
 package service
 
 import (
-	"encoding/json"
-	"os"
-	"path/filepath"
 	"task_tracker/internal/model"
-	"task_tracker/pkg/apperr"
+	"task_tracker/internal/repository"
 )
 
-type UserService struct{}
-
-func (s *UserService) GetAllUsers() (*[]model.User, error) {
-	userList, err := s.readFromFile()
-
-	if err != nil {
-		return nil, err
-	}
-
-	return userList, nil
+type UserService struct {
+	repository *repository.UserRepository
 }
 
-func (s *UserService) GetSingleUser(id uint) (*model.User, error) {
-	userList, err := s.readFromFile()
+func NewUserService(r *repository.UserRepository) *UserService {
+	return &UserService{repository: r}
+}
+
+func (s *UserService) GetAll() (*[]model.User, error) {
+	users, err := s.repository.GetAll()
 
 	if err != nil {
 		return nil, err
 	}
 
-	var user *model.User
+	return users, nil
+}
 
-	for _, u := range *userList {
-		if u.Id == id {
-			user = &u
-			break
-		}
-	}
+func (s *UserService) GetById(id int) (*model.User, error) {
+	user, err := s.repository.GetById(id)
 
-	if user == nil {
-		message := "User not found"
-		return nil, apperr.NotFoundErr(&message)
+	if err != nil {
+		return nil, err
 	}
 
 	return user, nil
 }
 
-func (s *UserService) AddUser(u *model.CreateUser) error {
-	userList, err := s.readFromFile()
-
-	if err != nil {
-		return err
-	}
-
-	var lastId uint
-
-	if len(*userList) == 0 {
-		lastId = 1
-	} else {
-		lastId = (*userList)[len(*userList)-1].Id + 1
-	}
-
-	*userList = append(*userList, model.User{Id: lastId, Email: u.Email, Name: u.Name})
-
-	err = s.writeToFile(userList)
+func (s *UserService) Create(u *model.User) error {
+	err := s.repository.Create(u)
 
 	if err != nil {
 		return err
@@ -70,46 +43,18 @@ func (s *UserService) AddUser(u *model.CreateUser) error {
 	return nil
 }
 
-func (s *UserService) readFromFile() (*[]model.User, error) {
-	cwd, err := os.Getwd()
-	databasePath := filepath.Join(cwd, "database", "users.json")
+func (s *UserService) Update(id int, u *model.User) error {
+	err := s.repository.Update(id, u)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	database, err := os.ReadFile(databasePath)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var userList []model.User
-
-	err = json.Unmarshal(database, &userList)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &userList, nil
+	return nil
 }
 
-func (s *UserService) writeToFile(d *[]model.User) error {
-	cwd, err := os.Getwd()
-	databasePath := filepath.Join(cwd, "database", "users.json")
-
-	if err != nil {
-		return err
-	}
-
-	userListJson, err := json.Marshal(&d)
-
-	if err != nil {
-		return err
-	}
-
-	err = os.WriteFile(databasePath, userListJson, 0666)
+func (s *UserService) Delete(id int) error {
+	err := s.repository.Delete(id)
 
 	if err != nil {
 		return err

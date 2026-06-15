@@ -13,10 +13,16 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-var userService service.UserService
+type UserHandler struct {
+	service *service.UserService
+}
 
-func GetAllUsersHandler(w http.ResponseWriter, r *http.Request) {
-	users, err := userService.GetAllUsers()
+func NewUserHandler(s *service.UserService) *UserHandler {
+	return &UserHandler{service: s}
+}
+
+func (h *UserHandler) GetAll(w http.ResponseWriter, r *http.Request) {
+	users, err := h.service.GetAll()
 
 	if err != nil {
 		response.SendErr(w, err, http.StatusInternalServerError)
@@ -26,15 +32,15 @@ func GetAllUsersHandler(w http.ResponseWriter, r *http.Request) {
 	response.SendData(w, users, http.StatusOK)
 }
 
-func GetSingleUserHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.ParseUint(chi.URLParam(r, "id"), 0, 64)
+func (h *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(chi.URLParam(r, "id"), 0, 64)
 
 	if err != nil {
 		response.SendErr(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	user, err := userService.GetSingleUser(uint(id))
+	user, err := h.service.GetById(int(id))
 
 	if err != nil {
 		response.SendAppErr(w, apperr.ConvertToAppErr(err))
@@ -44,8 +50,8 @@ func GetSingleUserHandler(w http.ResponseWriter, r *http.Request) {
 	response.SendData(w, user, http.StatusOK)
 }
 
-func AddUserHandler(w http.ResponseWriter, r *http.Request) {
-	var u model.CreateUser
+func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
+	var u model.User
 
 	err := json.NewDecoder(r.Body).Decode(&u)
 
@@ -63,7 +69,7 @@ func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = userService.AddUser(&u)
+	err = h.service.Create(&u)
 
 	if err != nil {
 		response.SendAppErr(w, apperr.ConvertToAppErr(err))

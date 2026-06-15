@@ -1,12 +1,16 @@
 package model
 
-type User struct {
-	Id    uint   `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
-}
+import (
+	"time"
 
-type CreateUser struct {
-	Name  string `validate:"required"`
-	Email string `validate:"required,email"`
+	"gorm.io/gorm"
+)
+
+type User struct {
+	Id        uint           `json:"id" gorm:"primaryKey"`
+	Name      string         `json:"name" gorm:"not null"`
+	Email     string         `json:"email" gorm:"unique,not null"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }
