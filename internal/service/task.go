@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"task_tracker/internal/model"
 	"task_tracker/internal/repository"
 )
@@ -13,8 +14,8 @@ func NewTaskService(r *repository.TaskRepository) *TaskService {
 	return &TaskService{repository: r}
 }
 
-func (s *TaskService) GetAll() ([]model.Task, error) {
-	tasks, err := s.repository.GetAll()
+func (s *TaskService) GetAll(ctx context.Context) ([]model.Task, error) {
+	tasks, err := s.repository.GetAll(ctx)
 
 	if err != nil {
 		return nil, err
@@ -23,8 +24,8 @@ func (s *TaskService) GetAll() ([]model.Task, error) {
 	return tasks, err
 }
 
-func (s *TaskService) GetById(id int) (*model.Task, error) {
-	task, err := s.repository.GetById(id)
+func (s *TaskService) GetById(id int, ctx context.Context) (*model.Task, error) {
+	task, err := s.repository.GetById(id, ctx)
 
 	if err != nil {
 		return nil, err
@@ -33,8 +34,8 @@ func (s *TaskService) GetById(id int) (*model.Task, error) {
 	return task, err
 }
 
-func (s *TaskService) Create(t *model.Task) error {
-	err := s.repository.Create(t)
+func (s *TaskService) Create(t *model.Task, ctx context.Context) error {
+	err := s.repository.Create(t, ctx)
 
 	if err != nil {
 		return err
@@ -43,8 +44,8 @@ func (s *TaskService) Create(t *model.Task) error {
 	return nil
 }
 
-func (s *TaskService) Update(id int, t *model.Task) error {
-	err := s.repository.Update(id, t)
+func (s *TaskService) Update(id int, t *model.Task, ctx context.Context) error {
+	err := s.repository.Update(id, t, ctx)
 
 	if err != nil {
 		return err
@@ -53,8 +54,8 @@ func (s *TaskService) Update(id int, t *model.Task) error {
 	return nil
 }
 
-func (s *TaskService) Delete(id int) error {
-	err := s.repository.Delete(id)
+func (s *TaskService) Delete(id int, ctx context.Context) error {
+	err := s.repository.Delete(id, ctx)
 
 	if err != nil {
 		return err

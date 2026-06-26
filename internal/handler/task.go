@@ -20,7 +20,7 @@ func NewTaskHandler(s *service.TaskService) *TaskHandler {
 }
 
 func (h *TaskHandler) GetAll(w http.ResponseWriter, r *http.Request) {
-	tasks, err := h.service.GetAll()
+	tasks, err := h.service.GetAll(r.Context())
 
 	if err != nil {
 		response.SendErr(w, apperr.ConvertToAppErr(err))
@@ -38,7 +38,7 @@ func (h *TaskHandler) GetById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	task, err := h.service.GetById(int(id))
+	task, err := h.service.GetById(int(id), r.Context())
 
 	if err != nil {
 		response.SendErr(w, apperr.ConvertToAppErr(err))
@@ -59,7 +59,7 @@ func (h *TaskHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.service.Create(&t)
+	err = h.service.Create(&t, r.Context())
 
 	if err != nil {
 		response.SendErr(w, apperr.ConvertToAppErr(err))

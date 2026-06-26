@@ -20,7 +20,7 @@ func NewUserHandler(s *service.UserService) *UserHandler {
 }
 
 func (h *UserHandler) GetAll(w http.ResponseWriter, r *http.Request) {
-	users, err := h.service.GetAll()
+	users, err := h.service.GetAll(r.Context())
 
 	if err != nil {
 		response.SendErr(w, apperr.ConvertToAppErr(err))
@@ -38,7 +38,7 @@ func (h *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.service.GetById(int(id))
+	user, err := h.service.GetById(int(id), r.Context())
 
 	if err != nil {
 		response.SendErr(w, apperr.ConvertToAppErr(err))
@@ -59,7 +59,7 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.service.Create(&u)
+	err = h.service.Create(&u, r.Context())
 
 	if err != nil {
 		response.SendErr(w, apperr.ConvertToAppErr(err))

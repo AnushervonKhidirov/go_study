@@ -15,8 +15,7 @@ func NewTaskRepository(db *gorm.DB) *TaskRepository {
 	return &TaskRepository{db: db}
 }
 
-func (r *TaskRepository) GetAll() ([]model.Task, error) {
-	ctx := context.Background()
+func (r *TaskRepository) GetAll(ctx context.Context) ([]model.Task, error) {
 	tasks, err := gorm.G[model.Task](r.db).Find(ctx)
 
 	if err != nil {
@@ -26,9 +25,8 @@ func (r *TaskRepository) GetAll() ([]model.Task, error) {
 	return tasks, nil
 }
 
-func (r *TaskRepository) GetById(id int) (*model.Task, error) {
-	ctx := context.Background()
-	task, err := gorm.G[model.Task](r.db).Where("id = ?", id).First(ctx)
+func (r *TaskRepository) GetById(id int, ctx context.Context) (*model.Task, error) {
+	task, err := gorm.G[model.Task](r.db).Where(getByIdQuery, id).First(ctx)
 
 	if err != nil {
 		return nil, err
@@ -37,9 +35,7 @@ func (r *TaskRepository) GetById(id int) (*model.Task, error) {
 	return &task, nil
 }
 
-func (r *TaskRepository) Create(t *model.Task) error {
-	ctx := context.Background()
-
+func (r *TaskRepository) Create(t *model.Task, ctx context.Context) error {
 	err := gorm.G[model.Task](r.db).Create(ctx, t)
 
 	if err != nil {
@@ -49,9 +45,8 @@ func (r *TaskRepository) Create(t *model.Task) error {
 	return nil
 }
 
-func (r *TaskRepository) Update(id int, t *model.Task) error {
-	ctx := context.Background()
-	_, err := gorm.G[model.Task](r.db).Where("id = ?", id).Updates(ctx, *t)
+func (r *TaskRepository) Update(id int, t *model.Task, ctx context.Context) error {
+	_, err := gorm.G[model.Task](r.db).Where(getByIdQuery, id).Updates(ctx, *t)
 
 	if err != nil {
 		return err
@@ -60,9 +55,8 @@ func (r *TaskRepository) Update(id int, t *model.Task) error {
 	return nil
 }
 
-func (r *TaskRepository) Delete(id int) error {
-	ctx := context.Background()
-	_, err := gorm.G[model.Task](r.db).Where("id = ?", id).Delete(ctx)
+func (r *TaskRepository) Delete(id int, ctx context.Context) error {
+	_, err := gorm.G[model.Task](r.db).Where(getByIdQuery, id).Delete(ctx)
 
 	if err != nil {
 		return err
